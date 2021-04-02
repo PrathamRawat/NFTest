@@ -5,6 +5,7 @@
     <title>minter</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.3.4/web3.min.js" integrity="sha512-TTGImODeszogiro9DUvleC9NJVnxO6M0+69nbM3YE9SYcVe4wZp2XYpELtcikuFZO9vjXNPyeoHAhS5DHzX1ZQ==" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/ipfs-core/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@pinata/sdk@1.1.13/lib/pinata-sdk.min.js"></script>
 </head>
 <body>
     <h1>Upload your Artwork</h1>
@@ -792,9 +793,14 @@
             console.log(ipfsPath)
             // Uploading the NFT Metadata to IPFS
             ipfsResult = await ipfsNode.add(JSON.stringify({
-                tag: ipfsPath,
                 name: name,
-                description: desc
+                description: desc,
+                image: "ipfs://" + ipfsPath,
+                external_url: "bruh.com",
+                attributes: [{
+                    trait_type: "artist",
+                    value: "mr. bruh"
+                }]
             }))
             ipfsPath = ipfsResult.path
             console.log(ipfsPath)
