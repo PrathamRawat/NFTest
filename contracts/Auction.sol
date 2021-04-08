@@ -29,6 +29,8 @@ contract Auction is IERC721Receiver {
     MintableToken tokenContract = "0xBe99Fb75bD331387958019Efe30C0F0Aa78D5DbD";
 
     constructor (address owner, uint256 startingBid, uint256 reservePrice, uint256 endBlock, uint256 tokenId) {
+        _registerInterface(IERC721Receiver.onERC721Received.selector);
+
         this.seller = seller;
         this.startingBid = startingBid;
         this.reservePrice = reservePrice;
@@ -57,8 +59,8 @@ contract Auction is IERC721Receiver {
         return bids;
     }
 
-    function onERC721Recieved() {
-        return MintableToken.onER
+    function isAuctionFinished() {
+        return endBlock >= block.number;
     }
 
     function cancelAuction() public onlyOwner {
@@ -84,6 +86,7 @@ contract Auction is IERC721Receiver {
         require(msg.sender == this.owner || msg.sender == this.maxBidder, "Operation not permitted.");
         require(this.open == true, "This auction has been closed by the owner.");
         require(block.number > this.endBlock, "This auction has not ended yet.");
-        tokenContract.
+        this.maxBidder.transfer(this.maxBid);
+        tokenContract.safeTransferFrom(this, this.maxBidder, this.tokenId);
     }
 }
