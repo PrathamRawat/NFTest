@@ -33,15 +33,11 @@
         let stream = await ipfsNode.cat(tag)
         console.log(stream)
         let buffers = []
-
         for await (const chunk of stream) {
             // chunks of data are returned as a Buffer, convert it back to a string
             buffers.push(chunk)
         }
-
-        console.log(buffers)
-
-        return new Blob([buffers[0]], {type:"image/jpg"})
+        return new Blob(buffers.concat(), {type:"image/jpg"})
     }
 
     let main = async function () {

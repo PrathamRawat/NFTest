@@ -37,9 +37,7 @@
             buffers.push(chunk)
         }
 
-        console.log(buffers)
-
-        return new Blob([buffers[0]], {type:"image/jpg"})
+        return new Blob(buffers.concat(), {type:"image/jpg"})
     }
 
     let main = async function () {
