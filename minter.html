@@ -31,7 +31,8 @@
         let web3 = new Web3(window.ethereum)
 
         const ipfsNode = await IpfsCore.create()
-        const publicKey = "0xb978005c34ef18aa469324f83684A26EcBBD95Bb"
+        const publicKey = (await web3.eth.getAccounts())[0];
+        console.log(publicKey)
         const nftContractAddress = "0xBe99Fb75bD331387958019Efe30C0F0Aa78D5DbD"
         const nftABI = [
             {
