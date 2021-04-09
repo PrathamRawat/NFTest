@@ -48,7 +48,6 @@
         let ipfsNode = await IpfsCore.create()
         let web3 = new Web3("wss://rinkeby.infura.io/ws/v3/d3742cb49e87441693d53ea037ed4736")
 
-        const publicKey = "0xb978005c34ef18aa469324f83684A26EcBBD95Bb"
         const nftContractAddress = "0xBe99Fb75bD331387958019Efe30C0F0Aa78D5DbD"
         const nftABI = [
             {
@@ -786,12 +785,9 @@
             }
         ]
 
-        let nftContract = new web3.eth.Contract(nftABI, nftContractAddress, {
-            from: publicKey
-        })
+        let nftContract = new web3.eth.Contract(nftABI, nftContractAddress)
 
         nftContract.defaultChain = "rinkeby"
-        nftContract.defaultAccount = publicKey
         console.log(nftContract.methods)
 
         for (let i = 1; i <= parseInt(await nftContract.methods.totalSupply().call()); i++) {
