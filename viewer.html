@@ -795,21 +795,25 @@
         console.log(nftContract.methods)
 
         for (let i = 1; i <= parseInt(await nftContract.methods.totalSupply().call()); i++) {
-            let url = await nftContract.methods.tokenURI(i).call();
+            try {
+                let url = await nftContract.methods.tokenURI(i).call();
 
-            let metadata = await getJSONfromIPFS(ipfsNode, url.replace("ipfs://", ""))
-            let list = document.getElementById("nft-list")
-            let title = document.createElement("h1")
-            let description = document.createElement("p")
-            let image = document.createElement("img")
+                let metadata = await getJSONfromIPFS(ipfsNode, url.replace("ipfs://", ""))
+                let list = document.getElementById("nft-list")
+                let title = document.createElement("h1")
+                let description = document.createElement("p")
+                let image = document.createElement("img")
 
-            title.appendChild(document.createTextNode(metadata.name))
-            description.appendChild(document.createTextNode(metadata.description))
-            image.src = window.URL.createObjectURL(await getImageFromIPFS(ipfsNode, metadata.tag))
+                title.appendChild(document.createTextNode(metadata.name))
+                description.appendChild(document.createTextNode(metadata.description))
+                image.src = window.URL.createObjectURL(await getImageFromIPFS(ipfsNode, metadata.image.replaceAll("ipfs://", "")))
 
-            list.appendChild(image)
-            list.appendChild(title)
-            list.appendChild(description)
+                list.appendChild(image)
+                list.appendChild(title)
+                list.appendChild(description)
+            } catch (e) {
+                console.log(e)
+            }
         }
     }
 
