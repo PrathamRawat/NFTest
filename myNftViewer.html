@@ -14,12 +14,10 @@
 </body>
 <script>
     let getJSONfromIPFS = async function(ipfsNode, tag) {
-        // let ipfsNode = await IpfsCore.create()
         let stream = await ipfsNode.cat(tag)
         let data = ""
 
         for await (const chunk of stream) {
-            // chunks of data are returned as a Buffer, convert it back to a string
             data += chunk.toString()
         }
 
@@ -27,13 +25,11 @@
     }
 
     let getImageFromIPFS = async function(ipfsNode, tag) {
-        // let ipfsNode = await IpfsCore.create()
         let stream = await ipfsNode.cat(tag)
         console.log(stream)
         let buffers = []
 
         for await (const chunk of stream) {
-            // chunks of data are returned as a Buffer, convert it back to a string
             buffers.push(chunk)
         }
 
