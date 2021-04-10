@@ -21,16 +21,16 @@ contract Auction is IERC721Receiver {
     uint256 reservePrice;
     uint256 endBlock;
     uint256 tokenId;
-    Bid[] bids;
 
     uint256 maxBid;
     address payable maxBidder;
 
+    uint256 numBids;
+    mapping (uint256 => Bid) bids;
+
     MintableToken tokenContract = MintableToken(0xBe99Fb75bD331387958019Efe30C0F0Aa78D5DbD);
 
     constructor (address sellerAccount, uint256 startingBidAmount, uint256 reservePriceAmount, uint256 endBlockLevel, uint256 nftTokenId) public {
-        // _registerInterface(IERC721Receiver.onERC721Received.selector);
-
         seller = sellerAccount;
         startingBid = startingBidAmount;
         reservePrice = reservePriceAmount;
@@ -40,6 +40,14 @@ contract Auction is IERC721Receiver {
         tokenId = nftTokenId;
         open = true;
         // tokenContract.safeTransferFrom();
+    }
+
+    function getTokenId() public view returns (uint256) {
+        return tokenId;
+    }
+
+    function isAuctionOpen() public view returns (bool) {
+        return open;
     }
 
     function getMaxBid() public view returns (uint256) {
@@ -58,8 +66,8 @@ contract Auction is IERC721Receiver {
         return endBlock;
     }
 
-    function getBids() public view returns (Bid[] memory){
-        return bids;
+    function getBid(uint256 id) public view returns (Bid){
+        return bids[id];
     }
 
     function isAuctionFinished() public view returns (bool){
@@ -85,7 +93,8 @@ contract Auction is IERC721Receiver {
         maxBidder.transfer(maxBid); // Returns old bid back to the previous bidder
         maxBid = msg.value;
         maxBidder = msg.sender;
-        bids.push(new Bid(msg.sender, msg.value));
+        bids[numBids] = new Bid(msg.sender, msg.value);
+        numBids++;
     }
 
     function transferItems() public {
@@ -104,22 +113,32 @@ contract Auction is IERC721Receiver {
 
 contract AuctionDaddy {
 
-    Auction[] auctions;
     MintableToken nftContract = MintableToken(0xBe99Fb75bD331387958019Efe30C0F0Aa78D5DbD);
 
-    constructor () public {}
+    mapping(uint256 => Auction) auctions;
+    uint256 numAuctions;
+
+    constructor () public {
+        numAuctions = 0;
+    }
 
     function createNewAuction(uint256 endBlock, uint256 reserve, uint256 tokenId, uint256 startingBid) public {
         require(msg.sender == nftContract.ownerOf(tokenId), "You must be the owner of an NFT to sell that NFT");
         require(endBlock - block.number < 100, "Auction will end too soon");
 
+
+
         Auction newAuction = new Auction(msg.sender, startingBid, reserve, endBlock, tokenId);
         nftContract.safeTransferFrom(msg.sender, address(newAuction), tokenId);
-        auctions.push(newAuction);
+        auctions[numAuctions] = newAuction;
+        numAuctions += 1;
     }
 
-    // function getAuctionsByNFT(uint256 tokenId) public view {
-    //     for(uint256 auctions )
-    // }
+    function getNumAuctions() public view returns (uint256) {
+        return numAuctions;
+    }
 
+    function getAuctionById(uint256 id) public view returns(Auction) {
+        return auctions[id];
+    }
 }
