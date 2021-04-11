@@ -125,7 +125,7 @@ contract AuctionDaddy is IERC721Receiver {
     }
 
     function createNewAuction(uint256 endBlock, uint256 reserve, uint256 tokenId, uint256 startingBid) public {
-        require(msg.sender == nftContract.ownerOf(tokenId), "You must be the owner of an NFT to sell that NFT");
+        require(address(this) == nftContract.ownerOf(tokenId), "Please transfer the NFT to this contract.");
         require(endBlock > block.number, "Auction will end too soon");
 
         Auction newAuction = new Auction(msg.sender, startingBid, reserve, endBlock, tokenId);
