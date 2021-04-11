@@ -104,7 +104,7 @@ contract Auction is IERC721Receiver {
     }
 
     function onERC721Received(address operator, address from, uint256 tokenId, bytes memory data) public returns (bytes4) {
-        return bytes4(keccak256("onERC721Received(address,uint256,bytes)"));
+        return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
     }
 }
 
@@ -121,7 +121,7 @@ contract AuctionDaddy is IERC721Receiver {
     }
 
     function onERC721Received(address operator, address from, uint256 tokenId, bytes memory data) public returns (bytes4) {
-        return bytes4(keccak256("onERC721Received(address,uint256,bytes)"));
+        return bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"));
     }
 
     function createNewAuction(uint256 endBlock, uint256 reserve, uint256 tokenId, uint256 startingBid) public {
