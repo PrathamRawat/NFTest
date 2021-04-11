@@ -21,10 +21,8 @@ contract Auction is IERC721Receiver {
     uint256 reservePrice;
     uint256 endBlock;
     uint256 tokenId;
-
     uint256 maxBid;
     address payable maxBidder;
-
     uint256 numBids;
     mapping (uint256 => Bid) bids;
 
@@ -111,7 +109,7 @@ contract Auction is IERC721Receiver {
 }
 
 
-contract AuctionDaddy {
+contract AuctionDaddy is IERC721Receiver {
 
     MintableToken nftContract = MintableToken(0xBe99Fb75bD331387958019Efe30C0F0Aa78D5DbD);
 
@@ -122,11 +120,13 @@ contract AuctionDaddy {
         numAuctions = 0;
     }
 
+    function onERC721Received(address operator, address from, uint256 tokenId, bytes memory data) public returns (bytes4) {
+        return bytes4(keccak256("onERC721Received(address,uint256,bytes)"));
+    }
+
     function createNewAuction(uint256 endBlock, uint256 reserve, uint256 tokenId, uint256 startingBid) public {
         require(msg.sender == nftContract.ownerOf(tokenId), "You must be the owner of an NFT to sell that NFT");
-        require(endBlock - block.number < 100, "Auction will end too soon");
-
-
+        require(endBlock > block.number, "Auction will end too soon");
 
         Auction newAuction = new Auction(msg.sender, startingBid, reserve, endBlock, tokenId);
         nftContract.safeTransferFrom(msg.sender, address(newAuction), tokenId);
