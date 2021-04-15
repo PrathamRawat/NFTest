@@ -44,7 +44,7 @@ contract Transfer is IERC721Receiver {
     }
 
     function transferItems() public payable {
-        require(msg.sender == seller, "Operation not permitted.");
+        require(msg.sender != seller, "You cannot buy your own item.");
         require(open, "This sale has been closed.");
         require(msg.value >= price, "Not enough paid");
         seller.transfer(msg.value);
