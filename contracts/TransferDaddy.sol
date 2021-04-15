@@ -45,10 +45,11 @@ contract Transfer is IERC721Receiver {
 
     function transferItems() public payable {
         require(msg.sender == seller, "Operation not permitted.");
-        require(open, "This sale has been closed by the owner.");
+        require(open, "This sale has been closed.");
         require(msg.value >= price, "Not enough paid");
         seller.transfer(msg.value);
         tokenContract.safeTransferFrom(address(this), msg.sender, tokenId);
+        open = false;
     }
 
     function onERC721Received(address operator, address from, uint256 tokenId, bytes memory data) public returns (bytes4) {
