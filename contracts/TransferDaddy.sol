@@ -85,7 +85,7 @@ contract TransferDaddy is IERC721Receiver {
         return numTransfers;
     }
 
-    function getSaleById(uint256 id) public view returns(Transfer) {
-        return sales[id];
+    function getSaleById(uint256 id) public view returns (address) {
+        return address(sales[id]);
     }
 }
